@@ -15,7 +15,6 @@ action "Load AKS credential" {
 }
 
 action "Deploy branch filter" {
-  needs = ["Push image to ACR"]
   uses = "actions/bin/filter@master"
   args = "branch master"
 }
