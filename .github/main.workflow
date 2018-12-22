@@ -9,8 +9,8 @@ action "Load AKS credential" {
   args = "aks get-credentials -g $AKS_RG_NAME -n $AKS_CLUSTER_NAME -a"
   env = {
     AZ_OUTPUT_FORMAT = "table"
-    AKS_RG_NAME = "aks-githubactions-poc-rg"
-    AKS_CLUSTER_NAME = "tomakabegithubactpoc"
+    AKS_RG_NAME = "your-aks-rg"
+    AKS_CLUSTER_NAME = "youraks"
   }
 }
 
@@ -26,6 +26,6 @@ action "Deploy to AKS" {
   args = ["cat $GITHUB_WORKSPACE/sampleapp.yaml |  sed -e 's/YOUR_VALUE/'\"$YOUR_VALUE\"'/' -e 's/YOUR_DNS_LABEL_NAME/'$YOUR_DNS_LABEL_NAME'/' | kubectl apply -f - "]
   env = {
     YOUR_VALUE = "Ale"
-    YOUR_DNS_LABEL_NAME = "tomakabedispvar"
+    YOUR_DNS_LABEL_NAME = "yournamedispvar"
   }
 }
