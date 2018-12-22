@@ -4,7 +4,7 @@ workflow "List Azure Resources" {
 }
 
 action "List Resources" {
-  uses = "actions/azure@master"
+  uses = "./azure-cli/"
   args = "resource list"
   secrets = ["AZURE_SERVICE_APP_ID", "AZURE_SERVICE_PASSWORD", "AZURE_SERVICE_TENANT"]
   env = {
