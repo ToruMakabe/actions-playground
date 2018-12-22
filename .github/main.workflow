@@ -25,7 +25,7 @@ action "Deploy to AKS" {
   runs = "sh -l -c"
   args = ["cat $GITHUB_WORKSPACE/sampleapp.yaml |  sed -e 's/YOUR_VALUE/'\"$YOUR_VALUE\"'/' -e 's/YOUR_DNS_LABEL_NAME/'$YOUR_DNS_LABEL_NAME'/' | kubectl apply -f - "]
   env = {
-    YOUR_VALUE = "Beer"
+    YOUR_VALUE = "Ale"
     YOUR_DNS_LABEL_NAME = "tomakabedispvar"
   }
 }
