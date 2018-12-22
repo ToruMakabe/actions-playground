@@ -1,13 +1,32 @@
-workflow "List Azure Resources" {
+workflow "Deploy app to AKS" {
   on = "push"
-  resolves = ["List Resources"]
+  resolves = ["Deploy to AKS"]
 }
 
-action "List Resources" {
+action "Load AKS credential" {
   uses = "./azure-cli/"
-  args = "resource list"
   secrets = ["AZURE_SERVICE_APP_ID", "AZURE_SERVICE_PASSWORD", "AZURE_SERVICE_TENANT"]
+  args = "aks get-credentials -g $AKS_RG_NAME -n $AKS_CLUSTER_NAME -a"
   env = {
     AZ_OUTPUT_FORMAT = "table"
+    AKS_RG_NAME = "aks-githubactions-poc-rg"
+    AKS_CLUSTER_NAME = "tomakabegithubactpoc"
+  }
+}
+
+action "Deploy branch filter" {
+  needs = ["Push image to ACR"]
+  uses = "actions/bin/filter@master"
+  args = "branch master"
+}
+
+action "Deploy to AKS" {
+  needs = ["Load AKS credential", "Deploy branch filter"]
+  uses = "docker://gcr.io/cloud-builders/kubectl"
+  runs = "sh -l -c"
+  args = ["cat $GITHUB_WORKSPACE/sampleapp.yaml |  sed -e 's/YOUR_VALUE/'\"$YOUR_VALUE\"'/' -e 's/YOUR_DNS_LABEL_NAME/'$YOUR_DNS_LABEL_NAME'/' | kubectl apply -f - "]
+  env = {
+    YOUR_VALUE = "Beer"
+    YOUR_DNS_LABEL_NAME = "tomakabedispvar"
   }
 }

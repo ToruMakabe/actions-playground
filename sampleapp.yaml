@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dispvar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dispvar
+  template:
+    metadata:
+      labels:
+        app: dispvar
+    spec:
+      containers:
+      - name: dispvar
+        image: torumakabe/display-env-var:0.0.5
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 100m
+          limits:
+            cpu: 100m
+            memory: 100M
+        env:
+          - name: DISPVAR
+            value: YOUR_VALUE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dispvar
+  annotations:
+    service.beta.kubernetes.io/azure-dns-label-name: YOUR_DNS_LABEL_NAME
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: dispvar
